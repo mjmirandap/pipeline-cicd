@@ -12,9 +12,12 @@ provider "aws" {
   region = "us-east-2" 
 }
 
+resource "random_id" "suffix" {
+  byte_length = 2
+}
 
 resource "aws_security_group" "pipelinecicd_sg" {
-  name        = "pipelinecicd-sg-pr-${var.pr_number}"
+  name        = "pipelinecicd-sg-pr-${var.pr_number}-${random_id.suffix.hex}" 
   description = "SG compartido para el ALB y las tareas de Fargate"
   vpc_id      = var.vpc_id 
 
