@@ -1,0 +1,11 @@
+{
+  "name": "pipeline-cicd-app",
+  "version": "1.0.0",
+  "description": "Aplicacion Node.js para el ambiente CI/CD efimero.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Milton (CI/CD User)",
+  "license": "ISC"
+}
