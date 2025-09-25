@@ -16,8 +16,10 @@ resource "random_id" "suffix" {
   byte_length = 2
 }
 
+
+
 resource "aws_security_group" "pipelinecicd_sg" {
-  name        = "pipelinecicd-sg-pr-${var.pr_number}-${random_id.suffix.hex}" 
+  name        = "pipelinecicd-sg-${var.run_id}"
   description = "SG compartido para el ALB y las tareas de Fargate"
   vpc_id      = var.vpc_id 
 
@@ -39,12 +41,12 @@ resource "aws_security_group" "pipelinecicd_sg" {
 
 # 1. Cluster de ECS para el ambiente
 resource "aws_ecs_cluster" "pipelinecicd_cluster" {
-  name = "pipelinecicd-cluster-pr-${var.pr_number}"
+  name = "pipelinecicd-cluster-${var.run_id}"
 }
 
 # 2. Target Group para el ALB
 resource "aws_lb_target_group" "pipelinecicd_tg" {
-  name        = "pipelinecicd-tg-pr-${var.pr_number}"
+  name        = "pipelinecicd-tg-${var.run_id}"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -53,12 +55,12 @@ resource "aws_lb_target_group" "pipelinecicd_tg" {
 
 # 3. Task definition (CON EL ROL DE EJECUCION Y LOGS)
 resource "aws_ecs_task_definition" "pipelinecicd_task" {
-  family                   = "pipelinecicd-task-pr-${var.pr_number}"
+  family                   = "pipelinecicd-task-${var.run_id}"
   
   container_definitions    = jsonencode([
     {
       "name"      = "pipelinecicd-container",
-      "image"     = "${var.ecr_url}:pr-${var.pr_number}", 
+      "image"     = "${var.ecr_url}:${var.image_tag}",
       "cpu"       = 256,
       "memory"    = 512,
       "essential" = true,
@@ -88,7 +90,7 @@ resource "aws_ecs_task_definition" "pipelinecicd_task" {
 
 # 4. ECS service
 resource "aws_ecs_service" "pipelinecicd_service" {
-  name            = "pipelinecicd-service-pr-${var.pr_number}"
+  name            = "pipelinecicd-service-${var.run_id}"
   cluster         = aws_ecs_cluster.pipelinecicd_cluster.id
   task_definition = aws_ecs_task_definition.pipelinecicd_task.arn
   desired_count   = 1
@@ -107,7 +109,7 @@ resource "aws_ecs_service" "pipelinecicd_service" {
 
 # 5. Application Load Balancer (ALB)
 resource "aws_lb" "pipelinecicd_alb" {
-  name               = "pipelinecicd-alb-pr-${var.pr_number}"
+  name               = "pipelinecicd-service-${var.run_id}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.pipelinecicd_sg.id]

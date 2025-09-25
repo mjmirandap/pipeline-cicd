@@ -1,8 +1,11 @@
-variable "pr_number" {
-  description = "El numero del pull request para el ambiente efimero."
+variable "run_id" {
+  description = "ID unico de la ejecucion de GitHub Actions."
   type        = number
 }
-
+variable "image_tag" {
+  description = "SHA del commit para etiquetar la imagen."
+  type        = string
+}
 variable "vpc_id" {
   description = "ID de la VPC principal."
   type        = string

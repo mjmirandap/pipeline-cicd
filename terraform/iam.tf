@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "pipeline-cicd-exec-role-pr-${var.pr_number}"
+  name = "pipeline-cicd-exec-role-${var.run_id}" 
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",

@@ -29,7 +29,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: pipeline-cicd
-          IMAGE_TAG: pr-${{ github.event.pull_request.number }} 
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           # Creacion del repositorio ECR si no existe
           aws ecr describe-repositories --repository-names $ECR_REPOSITORY || aws ecr create-repository --repository-name $ECR_REPOSITORY
@@ -57,7 +57,8 @@ jobs:
       - name: Terraform Plan & Apply
         # Se usará la etiqueta 'latest' en la definicion de tarea de ECS
         env:
-          TF_VAR_pr_number: 0 # Usamos 0 o un ID fijo para entornos permanentes
+          TF_VAR_run_id: ${{ github.run_id }} 
+          TF_VAR_image_tag: ${{ github.sha }} 
           TF_VAR_vpc_id: ${{ secrets.VPC_ID }}
           TF_VAR_public_subnets: ${{ secrets.PUBLIC_SUBNETS }}
           TF_VAR_private_subnets: ${{ secrets.PRIVATE_SUBNETS }}
