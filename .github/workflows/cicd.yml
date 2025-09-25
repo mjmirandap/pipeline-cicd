@@ -25,11 +25,11 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, Tag and Push Docker image
-        # La etiqueta 'latest' indica que es la ultima version de main
+        # La etiqueta 'pr-n' indica que es la ultima version de main
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: pipeline-cicd
-          IMAGE_TAG: latest 
+          IMAGE_TAG: pr-${{ github.event.pull_request.number }} 
         run: |
           # Creacion del repositorio ECR si no existe
           aws ecr describe-repositories --repository-names $ECR_REPOSITORY || aws ecr create-repository --repository-name $ECR_REPOSITORY
