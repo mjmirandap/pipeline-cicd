@@ -41,7 +41,7 @@ resource "aws_security_group" "pipelinecicd_sg" {
 
 # 1. Cluster de ECS para el ambiente
 resource "aws_ecs_cluster" "pipelinecicd_cluster" {
-  name = "pipelinecicd-cluster-${var.run_id}"
+  name = "pipelinecicd-cluster"
 }
 
 # 2. Target Group para el ALB
