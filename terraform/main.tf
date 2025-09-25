@@ -53,7 +53,7 @@ resource "aws_lb_target_group" "pipelinecicd_tg" {
   target_type = "ip"
 }
 
-# 3. Task definition (CON EL ROL DE EJECUCION Y LOGS)
+# 3. Task definition 
 resource "aws_ecs_task_definition" "pipelinecicd_task" {
   family                   = "pipelinecicd-task-${var.run_id}"
   
@@ -70,14 +70,14 @@ resource "aws_ecs_task_definition" "pipelinecicd_task" {
           "hostPort"      = 80
         }
       ],
-      "logConfiguration" : { 
-        "logDriver" : "awslogs",
-        "options" : {
-          "awslogs-group" : "/ecs/pipeline-cicd",
-          "awslogs-region" : "us-east-2",
-          "awslogs-stream-prefix" : "ecs"
-        }
-      }
+      #"logConfiguration" : { 
+      #  "logDriver" : "awslogs",
+      #  "options" : {
+      #    "awslogs-group" : "/ecs/pipeline-cicd",
+      #    "awslogs-region" : "us-east-2",
+      #    "awslogs-stream-prefix" : "ecs"
+      #  }
+      #}
     }
   ])
 
