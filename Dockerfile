@@ -2,7 +2,7 @@ FROM node:18-alpine
 
 # Instala dependencias y prepara el entorno
 WORKDIR /app
-COPY src/package*.json ./
+COPY src/package*.json ./ 
 RUN npm install
 
 # Copia el codigo de la aplicacion (index.js, etc.)
